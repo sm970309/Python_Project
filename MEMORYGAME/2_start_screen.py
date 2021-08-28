@@ -1,5 +1,6 @@
 import pygame
 
+#원을 그려주는 함수
 def display_start_screen():
     pygame.draw.circle(screen,WHITE,start_button.center,60,5)
 
@@ -10,10 +11,11 @@ screen_height = 720
 screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption("Memory Game")
 
-start_button = pygame.Rect(0,0,120,120,)
-start_button.center = (120,screen_height-120)
+#버튼 만들기
+start_button = pygame.Rect(0,0,120,120,)        #사각형 만듦(0,0) 기준으로 120x120 크기로 만듦
+start_button.center = (120,screen_height-120)   #해당 버튼에 중앙 설정
 
-
+#색상 (R,G,B)
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 
@@ -24,10 +26,11 @@ while running:
         if event.type == pygame.QUIT:   #창 닫기 이벤트 발생
             running = False
 
+    #screen 색 채우기
     screen.fill((BLACK))
-
     display_start_screen()
 
+    #화면 계속해서 업데이트
     pygame.display.update()
 
 # 게임 종료 메소드
