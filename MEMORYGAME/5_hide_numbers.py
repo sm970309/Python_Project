@@ -3,9 +3,10 @@ import time
 from random import *
 
 def display_start_screen():
+    global level
     # 첫 화면 표시
     start_font = pygame.font.Font(None,60)
-
+    title_font = pygame.font.Font(None,120)
     # 원 그리기
     pygame.draw.circle(screen,WHITE,start_button.center,60,5)
 
@@ -13,6 +14,38 @@ def display_start_screen():
     cell_text = start_font.render("Start", True, WHITE)
     text_circle = cell_text.get_rect(center=start_button.center)
     screen.blit(cell_text, text_circle)
+
+    # 레벨 쓰기
+    title = pygame.Rect(0, 0, 600, 200)
+    title.center = (640, 240)
+    pygame.draw.rect(screen, BLACK, title)
+
+    title_text = title_font.render("LEVEL "+str(level), True, WHITE)
+    text_title = title_text.get_rect(center=title.center)
+    screen.blit(title_text, text_title)
+
+def display_finished_screen():
+    global level,game_over
+    title_font1 = pygame.font.Font(None,120)
+    title_font2 = pygame.font.Font(None, 60)
+
+    # Game Over 쓰기
+    title1 = pygame.Rect(0, 0, 600, 200)
+    title1.center = (640, 240)
+    pygame.draw.rect(screen, BLACK, title1)
+
+    title_text = title_font1.render("Game Over", True, WHITE)
+    text_title = title_text.get_rect(center=title1.center)
+    screen.blit(title_text, text_title)
+    # 점수 쓰기
+    title2 = pygame.Rect(0, 0, 600, 200)
+    title2.center = (640, 480)
+    pygame.draw.rect(screen, BLACK, title2)
+
+    title2_text = title_font2.render("SCORE: "+str(level), True, WHITE)
+    text_title2 = title2_text.get_rect(center=title2.center)
+    screen.blit(title2_text, text_title2)
+    game_over = True
 
 def check_buttons(pos):
     global start,start_ticks
@@ -38,12 +71,11 @@ def display_game_screen():
             # 스크린에 숫자 그리기
             screen.blit(cell_text,text_rect)
 
-def display_level_screen():
-    pass
 def setup(level):
-    global display_time
+    global display_time,hidden
+    hidden = False
     # 몇 초 동안 보여줄지
-    display_time = max(1,5 - (level//3))
+    display_time = max(1,5-(level//3))
     # 몇 개의 숫자를 보여줄지
     number_count = min((level//3)+5,20)
 
@@ -89,7 +121,7 @@ def check_number_buttons(pos):
                 if not hidden:
                     hidden = True
             else:
-                running = False
+                display_finished_screen()
             break
 
 # 초기화 하기
@@ -114,6 +146,7 @@ start_ticks = None    # 시간 계산
 
 # 게임 시작 여부
 start = False
+game_over = False
 # 숨김 변수
 hidden = False
 # 레벨 화면 보여주기 위한 변수
@@ -131,28 +164,23 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONUP: #사용자가 마우스 클릭 했을 때
             click_pos = pygame.mouse.get_pos()   #클릭한 현재 좌표 위치
-            print(click_pos)
 
     #screen 색 채우기
     screen.fill((BLACK))
 
-    if start:
-        if first:
-            first = False
-        else:
-            display_game_screen()  #게임화면
-    else:
+    if start and not game_over:
+        display_game_screen()  #게임화면
+    elif not start and not game_over:
         display_start_screen()  #시작화면
+    elif game_over:
+        display_finished_screen()
 
     if len(number_buttons) == 0:
         level += 1
         setup(level)
-        hidden = False
-        first = True
+        start = False
     if click_pos:       # 사용자가 클릭을 하면
         check_buttons(click_pos)
-
-        print(level)
 
     #화면 계속해서 업데이트
     pygame.display.update()
