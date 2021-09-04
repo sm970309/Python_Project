@@ -9,7 +9,14 @@ def check_buttons(pos):
     if start_button.collidepoint(pos):      #start버튼의 좌표값
         start = True
 def display_game_screen():
-    pygame.draw.circle(screen,WHITE,start_button.center,120,5)
+    for idx,rect in enumerate(number_buttons,1):
+        pygame.draw.rect(screen,(50,50,50),rect)
+
+        # 숫자 텍스트
+        cell_text = game_font.render(str(idx),True,WHITE)
+        text_rect = cell_text.get_rect(center=rect.center)
+        # 스크린에 숫자 그리기
+        screen.blit(cell_text,text_rect)
 
 def setup(level):
     number_count = min((level//3)+5,20)
@@ -18,6 +25,11 @@ def setup(level):
 def shuffle_grid(number_count):
     rows = 5
     columns = 9
+
+    cell_size = 130
+    button_size = 110
+    screen_left_margin = 55
+    screen_top_margin = 20
 
     grid = [[0 for _ in range(columns)] for _ in range(rows)]
     number = 1
@@ -29,6 +41,16 @@ def shuffle_grid(number_count):
         if grid[x][y] == 0:
             grid[x][y] = number
             number += 1
+
+            # grid cell 위치 기준으로 x,y 위치를 구함
+            center_x = screen_left_margin+y*cell_size+cell_size/2
+            center_y = screen_top_margin + x*cell_size + cell_size/2
+
+            # 숫자 버튼 그리기
+            button = pygame.Rect(0,0,button_size,button_size)
+            button.center = (center_x,center_y)
+
+            number_buttons.append(button)
     print(grid)
 
 # 초기화 하기
@@ -37,16 +59,19 @@ screen_width = 1280
 screen_height = 720
 screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption("Memory Game")
+game_font = pygame.font.Font(None,120)
+# 버튼 만들기
+start_button = pygame.Rect(0,0,120,120,)        # 사각형 만듦(0,0) 기준으로 120x120 크기로 만듦
+start_button.center = (120,screen_height-120)   # 해당 버튼에 중앙 설정
 
-#버튼 만들기
-start_button = pygame.Rect(0,0,120,120,)        #사각형 만듦(0,0) 기준으로 120x120 크기로 만듦
-start_button.center = (120,screen_height-120)   #해당 버튼에 중앙 설정
-
-#색상 (R,G,B)
+# 색상 (R,G,B)
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 
-#게임 시작 여부
+# 누르는 버튼 리스트
+number_buttons = []
+
+# 게임 시작 여부
 start = False
 
 #게임 시작 전 설정
@@ -67,7 +92,6 @@ while running:
     screen.fill((BLACK))
 
     if start:
-        pass
         display_game_screen()  #게임화면
     else:
         display_start_screen()  #시작화면
