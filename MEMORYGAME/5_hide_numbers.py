@@ -77,7 +77,7 @@ def setup(level):
     # 몇 초 동안 보여줄지
     display_time = max(1,5-(level//3))
     # 몇 개의 숫자를 보여줄지
-    number_count = min((level//3)+5,20)
+    number_count = min(level+5,20)
 
     shuffle_grid(number_count)
 
