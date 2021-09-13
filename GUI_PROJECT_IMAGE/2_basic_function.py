@@ -1,6 +1,8 @@
 from tkinter import *
 import tkinter.ttk as ttk
 from tkinter import filedialog
+import tkinter.messagebox as msgbox
+
 root = Tk()
 root.title("IMAGE COMBINE PROGRAM")
 
@@ -13,6 +15,22 @@ def add_file():
 def del_file():
     for idx in reversed(list_file.curselection()):  #reversed => 반대로 출력
         list_file.delete(idx)
+
+def browse_dest_path():
+    folder_selected = filedialog.askdirectory()
+    if folder_selected is None:
+        return
+    txt_dest_path.delete(0,END)
+    txt_dest_path.insert(END,folder_selected)
+
+def start():
+    if list_file.size() == 0:
+        msgbox.showwarning(None,"이미지 파일을 추가하세요")
+        return
+    if len(txt_dest_path.get())==0:
+        msgbox.showwarning(None, "저장 경로를 추가하세요")
+    else:
+        print("HI")
 
 # 파일 프레임
 file_frame = Frame(root)
@@ -41,7 +59,7 @@ path_frame.pack(padx = 5,pady=5,fill="x")
 txt_dest_path = Entry(path_frame)
 txt_dest_path.pack(side="left",fill="x",expand=True,padx = 5,pady=5,ipady = 4)
 
-btn_dest_path = Button(path_frame,text="찾아보기",width=10)
+btn_dest_path = Button(path_frame,text="찾아보기",width=10,command = browse_dest_path)
 btn_dest_path.pack(side="right")
 
 # 옵션 프레임
@@ -90,7 +108,7 @@ frame_run.pack(padx = 5,pady=5,fill="x")
 btn_close = Button(frame_run,padx=5,pady=5,text="닫기",width=12,command = root.quit)
 btn_close.pack(padx = 5,pady=5,side = "right")
 
-btn_start = Button(frame_run,padx=5,pady=5,text="시작",width=12)
+btn_start = Button(frame_run,padx=5,pady=5,text="시작",width=12,command = start)
 btn_start.pack(padx = 5,pady=5,side = "right")
 
 root.resizable(False,False)
