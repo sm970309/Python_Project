@@ -1,19 +1,22 @@
 from tkinter import *
 import tkinter.messagebox as msgbox
+from tkinter import filedialog
 
 root = Tk()
 root.title("제목 없음 - Windows 메모장")
 root.geometry("640x480+300+100")       # 가로x세로 가로간격+세로간격
 
 def open_file():
-    f = open("mynote.txt",'r')
-    response = msgbox.askokcancel("파일 열기", "파일을 열면 현재 작성중인 문서가 지워집니다.\n계속 하시겠습니까?")
+    if txt is not None:
+        response = msgbox.askokcancel("파일 열기", "파일을 열면 현재 작성중인 문서가 지워집니다.\n계속 하시겠습니까?")
+
     if response:
         txt.delete("1.0", END)
-        lines = f.readlines()
+        files = filedialog.askopenfile(title="파일을 선택하세요", filetypes=(("txt", "*.txt"), ("모든 파일", "*.*")),\
+                                       initialdir=r"C:\Users\sm970\Git_Project\Python_Project\GUI_PROGRAMING")
+        lines = files.readlines()
         for line in lines:
-            txt.insert(END,line)
-    f.close()
+            txt.insert(END, line)
 
 def save_file():
     f = open("mynote.txt",'w')
