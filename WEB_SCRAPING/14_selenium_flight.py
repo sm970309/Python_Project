@@ -1,6 +1,10 @@
 from selenium import webdriver
 import time
-import re
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 browser = webdriver.Chrome()
 browser.maximize_window()
@@ -31,3 +35,12 @@ browser.find_elements_by_xpath('//b[text()="28"]')[0].click()
 time.sleep(1)
 # 항공권 검색
 browser.find_element_by_xpath('//span[text()="항공권 검색"]').click()
+
+# 조건에 따라서 기다리기(XPATH 기준 -> 해당 element가 나올때 까지)
+try:
+    elem = WebDriverWait(browser,10).until(EC.presence_of_elements_located((By.XPATH,'//*[@id="__next"]/div/div[1]/div[5]/div/div[2]/div[2]')))
+    new_list = elem.text.split('\n')
+    print(new_list)
+
+finally:
+    browser.quit()
